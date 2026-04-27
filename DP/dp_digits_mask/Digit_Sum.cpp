@@ -17,8 +17,9 @@ int dp1[20][2][2] ;
 int count(int idx , int upper , int lower ) {
     if(idx == n) return 1;
 
+
     int &ret = dp1[idx][upper][lower] ;
-    if(~ret && upper && lower) return ret ;
+    if(~ret && upper && lower) return ret ; // upper && lower --> tric to avoid memeset in each test case
     ret=0 ;
 
     int lo = lower ? 0 : L[idx]-'0' ;
@@ -55,6 +56,7 @@ void solve() {
     cin >> L >> R ;
 
     reverse(all(L)) ;
+    /// make all strings in all test cases in the same size to avoid meme
     while((int)L.size() < 17) {
         L += '0' ;
     }
