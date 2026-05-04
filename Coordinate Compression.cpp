@@ -10,12 +10,12 @@ struct Coordination {
         vals.erase(unique(vals.begin(), vals.end()), vals.end());
     }
  
-    int get(int x) {
-        return (lower_bound(vals.begin(), vals.end(), x) - vals.begin()) + 1;
+    int get(int x) { // 0-idexed
+        return (lower_bound(vals.begin(), vals.end(), x) - vals.begin()) ; // +1 if 1-indexed
     }
  
     int original(int idx) {
-        return vals[idx - 1];
+        return vals[idx]; // vals[idex-1] if 1-indexed
     }
  
     int size() {
