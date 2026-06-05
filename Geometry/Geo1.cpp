@@ -47,6 +47,10 @@ pt prep(pt p){
     return {-p.y, p.x};
 }
 
+void getPoint(pt &p) {
+    int xx , yy ; cin >> xx >> yy ;
+    p={(T)xx,(T)yy} ;
+}
 //////////////////////////////////// TRANSFORMATIONS ///////////////////////////////////////////////
 
 // Translates a point by a given vector.
