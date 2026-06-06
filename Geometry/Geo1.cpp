@@ -1,4 +1,4 @@
-/// TRANSFORMATIONS , ANGLES , Lines , Segments , Polygon
+/// Basics , TRANSFORMATIONS , ANGLES , Lines , Segments , Polygon
 
 
 #define ld long double
@@ -7,6 +7,11 @@ typedef ld T;
 typedef complex<T> pt;
 #define x real() // _
 #define y imag() // |
+const ld PI = acosl(-1.0L) ;
+
+
+bool operator==(pt a, pt b) {return fabs(a.x - b.x) < EPS && fabs(a.y - b.y) < EPS;}
+bool operator!=(pt a, pt b) {return !(a == b);}
 
 
 // Returns the squared magnitude (length²) of a vector/point.
@@ -51,7 +56,7 @@ void getPoint(pt &p) {
     int xx , yy ; cin >> xx >> yy ;
     p={(T)xx,(T)yy} ;
 }
-//////////////////////////////////// TRANSFORMATIONS ///////////////////////////////////////////////
+///////////////////////////////// TRANSFORMATIONS /////////////////////////////////////
 
 // Translates a point by a given vector.
 // v: translation vector, p: point to be moved.
@@ -82,7 +87,7 @@ pt linearTransfo(pt p, pt q, pt r, pt fp, pt fq) {
     return fp + (r - p) * (fq - fp) / (q - p);
 }
 
-//////////////// ANGLES ////////////////////////
+////////////////////////////// ANGLES /////////////////////////////////////
 
 // Returns the orientation value , check if location of C when a-->b
 // a,b,c: points used to determine turn direction.
@@ -102,7 +107,7 @@ T angle(pt v, pt w){
 T orientedAngle(pt a, pt b, pt c){
     ld ampli = angle(b - a, c - a);
     if(orient(a, b, c) > 0) return ampli;
-    else return 2 * M_PI - ampli;
+    else return 2 * PI - ampli;
 }
 
 // Returns the signed angle travelled from AB to AC.
@@ -126,7 +131,7 @@ bool inAngle(pt a, pt b, pt c, pt p) {
     return (abp >= 0 && acp <= 0) ^ (abc < 0);
 }
 
-/////////////////////////////////////////////////// Lines //////////////////////////////////////////////////////////
+////////////////////////////////// Lines ///////////////////////////////////////
 
 struct line{
 
@@ -241,11 +246,11 @@ line bisector(line l1, line l2, bool interior) {
 
 
 //////////////////////////////////////////  SEGMENTS   //////////////////////////////////////////
- 
+
 bool inDisk(pt a, pt b, pt p) {
     return dot(a-p, b-p) <= EPS;
 }
- 
+
 bool onSegment(pt a, pt b, pt c){
     return orient(a, b, c) == 0 && inDisk(a, b, c);
 }
@@ -274,13 +279,13 @@ set<pair<ld,ld>> inters(pt a, pt b, pt c, pt d) {
         s.insert(make_pair(b.x, b.y));
     }
     if(s.size()) return s;
- 
+
     if (properInter(a,b,c,d,out)) return {make_pair(out.x, out.y)};
     if (onSegment(c,d,a)) s.insert(make_pair(a.x, a.y));
     if (onSegment(c,d,b)) s.insert(make_pair(b.x, b.y));
     if (onSegment(a,b,c)) s.insert(make_pair(c.x, c.y));
     if (onSegment(a,b,d)) s.insert(make_pair(d.x, d.y));
- 
+
     return s;
 }
 
@@ -301,5 +306,62 @@ ld segSeg(pt a, pt b, pt c, pt d) {
         return 0;
     return min({segPoint(a,b,c), segPoint(a,b,d),
                 segPoint(c,d,a), segPoint(c,d,b)});
+}
+
+////////////////////// polygons ////////////////////////////
+
+ld areaTriangle(pt a, pt b, pt c) {
+    return abs(cross(b-a, c-a)) / 2.0;
+}
+
+ld areaPolygon(vector<pt> p) {
+    ld area = 0.0;
+    for (int i = 0, n = p.size(); i < n; i++) {
+        area += cross(p[i], p[(i+1)%n]); // wrap back to 0 if i == n - 1
+    }
+    return abs(area) / 2.0 ; /// area < 0 when take the points in either clockwise order ( اتجاه عقارب الساعة )
+}
+
+bool above(pt a, pt p) {
+    return p.y >= a.y;
+}
+// check if [PQ] crosses ray from A
+bool crossesRay(pt a, pt p, pt q) {
+    return (above(a,q)- above(a,p)) * orient(a,p,q) > 0;
+}
+
+// Checks whether a point is inside a polygon using ray casting.
+// p: polygon vertices, a: query point, strict: true => boundary excluded, false => boundary included.
+bool inPolygon(vector<pt> p, pt a, bool strict = true) {
+    // passing strict = true when want the point strinct in polygon
+    int numCrossings = 0;
+    for (int i = 0, n = p.size(); i < n; i++) {
+        if (onSegment(p[i], p[(i+1)%n], a))
+            return !strict;
+        numCrossings += crossesRay(a, p[i], p[(i+1)%n]);
+    }
+    return numCrossings & 1; // inside if odd number of crossings
+}
+
+///////////////////////////// Triangle ////////////////////////////////
+// a=length of bc ,c= length of ab , b=length of ac
+// A is angle for point A , B is angle for point B , C is angle for poitn C
+// sin (A)/a=sin(B)/b=sin(C)/c
+// a*a=b*b+c*c-2*b*c * cos(A)
+// b*b=a*a+c*c-2*a*c * cos(B)
+// c*c=a*a+b*b-2*a*b * cos(C)
+// sin(A+B)=sin(A)*cos(B) + cos(A)*sin(B)
+// sin(A-B)=sin(A)*cos(B)-cos(A)*sin(B)
+// cos(A+B)=cos(A)*cos(B)-sin(A)*sin(B)
+// cos(A-B)=cos(A)*cos(B)+sin(A)*sin(B)
+
+// function to calculate area of triangle which given 3 medians
+ld Area(ld m1,ld m2,ld m3) {
+    if (m1<=0 or m2<=0 or m3<=0) return -1;
+    ld s=(m1+m2+m3)/2;
+    ld median_area=sqrt(s*(s-m1)*(s-m2)*(s-m3));
+    ld area=4/3.0*median_area;
+    if (area<=0 or median_area<=0)return -1;
+    return area;
 }
 
