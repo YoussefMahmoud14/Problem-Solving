@@ -133,6 +133,10 @@ bool inAngle(pt a, pt b, pt c, pt p) {
 
 ////////////////////////////////// Lines ///////////////////////////////////////
 
+// check if p1,p2,p3 are collinear 
+// collinear when cross == 0
+ll cross = (x2 - x1) * (y3 - y1) - (y2 - y1) * (x3 - x1);
+
 struct line{
 
     pt v;     // Direction vector of the line , Normal = ( b , -a )
