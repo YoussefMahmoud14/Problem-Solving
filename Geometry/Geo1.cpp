@@ -95,6 +95,12 @@ T orient(pt a, pt b, pt c){
     return cross(b - a, c - a);
 }
 
+ld polar_angle(pt p) {
+    ld angle = atan2(p.y,p.x);
+    if (angle < 0) angle += 2 * PI;
+    return angle ;
+}
+
 // Returns the smallest angle between two vectors in radians.
 // v: first vector, w: second vector.
 T angle(pt v, pt w){
