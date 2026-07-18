@@ -56,6 +56,12 @@ void getPoint(pt &p) {
     int xx , yy ; cin >> xx >> yy ;
     p={(T)xx,(T)yy} ;
 }
+
+ld dist(pt p1 , pt p2) {
+    ld X = (p1.x - p2.x) * (p1.x - p2.x) ;
+    ld Y = (p1.y - p2.y) * (p1.y - p2.y) ;
+    return sqrt(X + Y) ;
+}
 ///////////////////////////////// TRANSFORMATIONS /////////////////////////////////////
 
 // Translates a point by a given vector.
@@ -100,7 +106,13 @@ ld polar_angle(pt p) {
     if (angle < 0) angle += 2 * PI;
     return angle ;
 }
+ld toRad(double deg) {
+    return deg * PI / 180.0;
+}
 
+ld toDeg(double rad) {
+    return rad * 180.0 / PI;
+}
 // Returns the smallest angle between two vectors in radians.
 // v: first vector, w: second vector.
 T angle(pt v, pt w){
